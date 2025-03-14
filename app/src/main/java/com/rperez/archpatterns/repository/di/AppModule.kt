@@ -5,7 +5,7 @@ import com.rperez.archpatterns.repository.data.local.StockDatabase
 import com.rperez.archpatterns.repository.data.remote.StockRemoteDataSource
 import com.rperez.archpatterns.repository.data.remote.api.FinnhubApi
 import com.rperez.archpatterns.repository.domain.repository.StockRepository
-import com.rperez.archpatterns.repository.domain.repository.StockRepositoryImpl
+import com.rperez.archpatterns.repository.data.repository.StockRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

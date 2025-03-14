@@ -1,9 +1,10 @@
-package com.rperez.archpatterns.repository.domain.repository
+package com.rperez.archpatterns.repository.data.repository
 
 import com.rperez.archpatterns.repository.data.local.StockDatabase
 import com.rperez.archpatterns.repository.data.local.entities.StockEntity
 import com.rperez.archpatterns.repository.data.model.Stock
 import com.rperez.archpatterns.repository.data.remote.StockRemoteDataSource
+import com.rperez.archpatterns.repository.domain.repository.StockRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
