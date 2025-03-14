@@ -17,15 +17,16 @@ class StockRepositoryImpl @Inject constructor(
     override suspend fun getStock(symbol: String): Stock {
         // Check local database first
         val localStock = localDataSource.stockDao().getLatestStock(symbol)
-        return if (localStock != null && isCacheValid(localStock.timestamp)) {
-            // Return cached data if valid
-            Stock(
+        if (localStock != null && isCacheValid(localStock.timestamp)) {
+            return Stock(
                 symbol = localStock.symbol,
                 name = localStock.name,
                 price = localStock.price,
                 timestamp = localStock.timestamp
             )
-        } else {
+        }
+
+        return try {
             // Fetch from remote API
             val remoteStock = remoteDataSource.getStock(symbol)
             // Cache the data locally
@@ -38,6 +39,16 @@ class StockRepositoryImpl @Inject constructor(
                 )
             )
             remoteStock
+        } catch (_: Exception) {
+            // If API fails, return cached data (if available) or a default value
+            localStock?.let {
+                Stock(
+                    symbol = it.symbol,
+                    name = it.name,
+                    price = it.price,
+                    timestamp = it.timestamp
+                )
+            } ?: throw Exception("Failed to fetch stock data and no cached data available")
         }
     }
 

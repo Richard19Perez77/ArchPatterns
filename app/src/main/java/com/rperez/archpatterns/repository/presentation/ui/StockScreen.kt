@@ -42,10 +42,12 @@ fun StockScreen(viewModel: StockViewModel = hiltViewModel()) {
             CircularProgressIndicator()
         } else if (error != null) {
             Text(
-                text = error!!, color = MaterialTheme.colorScheme.error, fontSize = 16.sp
+                text = error.orEmpty(),
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 16.sp
             )
         } else if (stock != null) {
-            StockDetails(stock!!)
+            stock?.let { StockDetails(it) }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
