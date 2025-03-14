@@ -25,6 +25,17 @@ class StockViewModel @Inject constructor(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> get() = _error.asStateFlow()
 
+    private val _stockHistory = MutableStateFlow<List<Stock>>(emptyList())
+    val stockHistory: StateFlow<List<Stock>> get() = _stockHistory.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            repository.getStockHistory().collect { history ->
+                _stockHistory.value = history
+            }
+        }
+    }
+
     fun fetchStock(symbol: String) {
         viewModelScope.launch {
             _isLoading.value = true

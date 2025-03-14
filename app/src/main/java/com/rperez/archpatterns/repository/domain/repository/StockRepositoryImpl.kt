@@ -4,6 +4,8 @@ import com.rperez.archpatterns.repository.data.local.StockDatabase
 import com.rperez.archpatterns.repository.data.local.entities.StockEntity
 import com.rperez.archpatterns.repository.data.model.Stock
 import com.rperez.archpatterns.repository.data.remote.StockRemoteDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class StockRepositoryImpl @Inject constructor(
@@ -13,7 +15,7 @@ class StockRepositoryImpl @Inject constructor(
 
     override suspend fun getStock(symbol: String): Stock {
         // Check local database first
-        val localStock = localDataSource.stockDao().getStock(symbol)
+        val localStock = localDataSource.stockDao().getLatestStock(symbol)
         return if (localStock != null && isCacheValid(localStock.timestamp)) {
             // Return cached data if valid
             Stock(
@@ -36,6 +38,20 @@ class StockRepositoryImpl @Inject constructor(
             )
             remoteStock
         }
+    }
+
+    override fun getStockHistory(): Flow<List<Stock>> {
+        return localDataSource.stockDao().getStockHistory()
+            .map { stockEntities ->
+                stockEntities.map { entity ->
+                    Stock(
+                        symbol = entity.symbol,
+                        name = entity.name,
+                        price = entity.price,
+                        timestamp = entity.timestamp
+                    )
+                }
+            }
     }
 
     private fun isCacheValid(timestamp: Long): Boolean {
