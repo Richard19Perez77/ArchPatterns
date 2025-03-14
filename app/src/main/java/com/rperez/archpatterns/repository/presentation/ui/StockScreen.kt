@@ -73,17 +73,7 @@ fun StockScreen(viewModel: StockViewModel = hiltViewModel()) {
 @Composable
 fun StockDetails(stock: Stock) {
 
-    fun formatTimestamp(timestamp: Long): String {
-        return try {
-            val date = Date(timestamp * 1000)
-            val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            format.format(date)
-        } catch (_: Exception) {
-            "Invalid Date"
-        }
-    }
-
-    val formattedTimestamp = formatTimestamp(stock.timestamp) // Convert timestamp to date
+    val formattedTimestamp = stock.getFormattedTimestamp() // Convert timestamp to date
 
     Column {
         Text(
@@ -131,7 +121,7 @@ fun StockHistoryItem(stock: Stock) {
         }
     }
 
-    val formattedTimestamp = formatTimestamp(stock.timestamp)
+    val formattedTimestamp = stock.getFormattedTimestamp()
 
     Card(
         modifier = Modifier

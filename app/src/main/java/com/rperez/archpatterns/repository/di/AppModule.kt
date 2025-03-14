@@ -1,5 +1,6 @@
 package com.rperez.archpatterns.repository.di
 
+import com.rperez.archpatterns.BuildConfig
 import android.content.Context
 import com.rperez.archpatterns.repository.data.local.StockDatabase
 import com.rperez.archpatterns.repository.data.remote.StockRemoteDataSource
@@ -56,6 +57,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApiKey(): String {
-        return "cva0fg1r01qpd9s9vosgcva0fg1r01qpd9s9vot0" // Replace with your actual API key
+        return BuildConfig.FINNHUB_API_KEY
     }
 }

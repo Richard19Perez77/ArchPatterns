@@ -11,6 +11,10 @@ android {
     namespace = "com.rperez.archpatterns"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.rperez.archpatterns"
         minSdk = 27
@@ -23,11 +27,16 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("String", "FINNHUB_API_KEY", "\"${project.findProperty("FINNHUB_API_KEY")}\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+
+        debug {
+            buildConfigField("String", "FINNHUB_API_KEY", "\"${project.findProperty("FINNHUB_API_KEY")}\"")
         }
     }
     compileOptions {
