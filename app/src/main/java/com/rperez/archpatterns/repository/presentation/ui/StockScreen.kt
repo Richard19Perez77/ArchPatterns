@@ -1,11 +1,13 @@
 package com.rperez.archpatterns.repository.presentation.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,12 +20,11 @@ fun StockScreen(viewModel: StockViewModel = hiltViewModel()) {
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        contentAlignment = Alignment.Center
     ) {
         if (isLoading) {
             CircularProgressIndicator()
@@ -45,18 +46,26 @@ fun StockScreen(viewModel: StockViewModel = hiltViewModel()) {
 @Composable
 fun StockDetails(stock: Stock) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = stock.name, fontSize = 24.sp, fontWeight = FontWeight.Bold
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = stock.name,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Symbol: ${stock.symbol}", fontSize = 18.sp
+            text = "Symbol: ${stock.symbol}",
+            fontSize = 18.sp
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Price: $${stock.price}", fontSize = 18.sp
+            text = "Price: $${stock.price}",
+            fontSize = 18.sp
         )
     }
 }
