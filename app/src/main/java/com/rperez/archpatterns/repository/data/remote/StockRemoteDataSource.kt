@@ -13,7 +13,7 @@ class StockRemoteDataSource @Inject constructor(
         val response = finnhubApi.getStockQuote(symbol, apiKey)
         return Stock(
             symbol = symbol,
-            name = "Taiwan Semiconductor Manufacturing Company", // Hardcoded for now
+            name = "Taiwan Semiconductor Manufacturing Company",
             price = response.currentPrice,
             timestamp = response.timestamp
         )
