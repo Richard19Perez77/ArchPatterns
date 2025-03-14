@@ -130,7 +130,6 @@ fun StockHistoryItem(stock: Stock) {
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = stock.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Text(text = "Symbol: ${stock.symbol}", fontSize = 16.sp)
             Text(text = "Price: $${stock.price}", fontSize = 16.sp)
             Text(
