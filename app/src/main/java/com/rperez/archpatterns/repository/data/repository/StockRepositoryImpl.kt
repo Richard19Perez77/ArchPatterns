@@ -57,7 +57,8 @@ class StockRepositoryImpl @Inject constructor(
 
     private fun isCacheValid(timestamp: Long): Boolean {
         val currentTime = System.currentTimeMillis() / 1000
-        val cacheDuration = 5 * 60 * 1000 // 5 minutes cache validity
-        return (currentTime - timestamp) < cacheDuration
+        val cacheDuration = 60 * 5 // dealing with seconds 60 1 minute * 5 for 5 minutes
+        val currentCacheTime = currentTime - timestamp
+        return currentCacheTime < cacheDuration
     }
 }
