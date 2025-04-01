@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,9 +51,16 @@ fun StockLiveScreen(vm: StockViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        Text(
+            "TSMC: ${state.prices.lastOrNull() ?: "Loading..."}",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         LazyColumn {
-            items(state.prices.entries.toList()) { (symbol, price) ->
-                Text("$symbol: $price")
+            items(state.prices.reversed()) { price ->
+                Text("TSM: $price")
             }
         }
 

@@ -37,17 +37,23 @@ class StockViewModel : ViewModel() {
 
         val json = JSONObject(message)
         val data = json.optJSONArray("data") ?: return
-        val priceUpdates = mutableMapOf<String, Float>()
+
+        val newPrices = mutableListOf<Float>()
 
         for (i in 0 until data.length()) {
             val obj = data.getJSONObject(i)
             val symbol = obj.getString("s")
-            val price = obj.getDouble("p").toFloat()
-            priceUpdates[symbol] = price
+            if (symbol == "TSM") {
+                val price = obj.getDouble("p").toFloat()
+                newPrices += price
+            }
         }
 
-        _state.update {
-            it.copy(prices = it.prices + priceUpdates)
+        if (newPrices.isNotEmpty()) {
+            _state.update {
+                val updatedPrices = (it.prices + newPrices).takeLast(50)
+                it.copy(prices = it.prices + updatedPrices)
+            }
         }
     }
 }
