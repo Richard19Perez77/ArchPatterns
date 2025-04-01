@@ -43,7 +43,7 @@ import java.util.Locale
 fun StockLiveScreen(vm: StockViewModel = viewModel()) {
     val state by vm.state.collectAsState()
 
-    var chartMinY by remember { mutableFloatStateOf(0f) }
+    var chartMinY by remember { mutableFloatStateOf(900f) }
     var chartMaxY by remember { mutableFloatStateOf(0f) }
 
     Column(
@@ -77,19 +77,21 @@ fun StockLiveScreen(vm: StockViewModel = viewModel()) {
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        val step = 20
+        val step = 50
 
         if (state.prices.isNotEmpty()) {
-            val pointsData: List<Point> =
-                state.prices.takeLast(step).mapIndexed { index, price ->
-                    Point(index.toFloat() + 1, price)
+            var pointsData: List<Point> =
+                state.prices.takeLast(step - 2).mapIndexed { index, price ->
+                    Point(index.toFloat(), price)
                 }
             val yValues = pointsData.map { it.y }
-            chartMinY = yValues.minOrNull() ?: 167f
-            chartMaxY = yValues.maxOrNull() ?: 168f
-            val yRange = chartMaxY - chartMinY
-            val yPadding = yRange * 0.1f  // 10% padding on top and bottom
+            chartMinY = minOf(chartMinY, yValues.minOrNull() ?: chartMinY)
+            chartMaxY = maxOf(chartMaxY, yValues.maxOrNull() ?: chartMaxY)
+
+            val temp = pointsData.toMutableList()
+            temp.add(0, Point(-1f, chartMinY))
+            temp.add(0, Point(-2f, chartMaxY))
+            pointsData = temp.toList()
 
             val xAxisData = AxisData.Builder()
                 .axisStepSize(15.dp)
@@ -99,16 +101,15 @@ fun StockLiveScreen(vm: StockViewModel = viewModel()) {
                 .labelAndAxisLinePadding(10.dp)
                 .build()
 
+            val yAxisSteps = 10
+            val yStepSize = (chartMaxY - chartMinY) / yAxisSteps
+
             val yAxisData = AxisData.Builder()
-                .steps(step)
+                .steps(yAxisSteps)
                 .backgroundColor(Color.Red)
-                .labelAndAxisLinePadding(20.dp)
+                .labelAndAxisLinePadding(12.dp)
                 .labelData { i ->
-                    val stepValue = (chartMaxY - chartMinY + 2 * yPadding) / 2
-                    String.format(
-                        Locale.getDefault(),
-                        "%.2f", chartMinY - yPadding + (i * stepValue)
-                    )
+                    String.format(Locale.getDefault(), "%.2f", chartMinY + (i * yStepSize))
                 }
                 .build()
 
