@@ -15,6 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +42,9 @@ import java.util.Locale
 @Composable
 fun StockLiveScreen(vm: StockViewModel = viewModel()) {
     val state by vm.state.collectAsState()
+
+    var chartMinY by remember { mutableFloatStateOf(0f) }
+    var chartMaxY by remember { mutableFloatStateOf(0f) }
 
     Column(
         modifier = Modifier
@@ -80,9 +86,9 @@ fun StockLiveScreen(vm: StockViewModel = viewModel()) {
                     Point(index.toFloat() + 1, price)
                 }
             val yValues = pointsData.map { it.y }
-            val minY = yValues.minOrNull() ?: 167f
-            val maxY = yValues.maxOrNull() ?: 168f
-            val yRange = maxY - minY
+            chartMinY = yValues.minOrNull() ?: 167f
+            chartMaxY = yValues.maxOrNull() ?: 168f
+            val yRange = chartMaxY - chartMinY
             val yPadding = yRange * 0.1f  // 10% padding on top and bottom
 
             val xAxisData = AxisData.Builder()
@@ -98,10 +104,10 @@ fun StockLiveScreen(vm: StockViewModel = viewModel()) {
                 .backgroundColor(Color.Red)
                 .labelAndAxisLinePadding(20.dp)
                 .labelData { i ->
-                    val stepValue = (maxY - minY + 2 * yPadding) / 2
+                    val stepValue = (chartMaxY - chartMinY + 2 * yPadding) / 2
                     String.format(
                         Locale.getDefault(),
-                        "%.2f", minY - yPadding + (i * stepValue)
+                        "%.2f", chartMinY - yPadding + (i * stepValue)
                     )
                 }
                 .build()
