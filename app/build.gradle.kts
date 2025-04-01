@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation("co.yml:ycharts:2.1.0")
     implementation("androidx.compose.runtime:runtime:1.7.8")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("com.google.dagger:hilt-android:2.54")

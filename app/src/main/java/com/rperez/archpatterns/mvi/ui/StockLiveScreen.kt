@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,8 +20,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import co.yml.charts.axis.AxisData
+import co.yml.charts.common.model.Point
+import co.yml.charts.ui.linechart.LineChart
+import co.yml.charts.ui.linechart.model.GridLines
+import co.yml.charts.ui.linechart.model.IntersectionPoint
+import co.yml.charts.ui.linechart.model.Line
+import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.ui.linechart.model.LinePlotData
+import co.yml.charts.ui.linechart.model.LineStyle
+import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
+import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
+import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.rperez.archpatterns.mvi.model.StockIntent
 import com.rperez.archpatterns.mvi.viewmodel.StockViewModel
+import java.util.Locale
 
 @Composable
 fun StockLiveScreen(vm: StockViewModel = viewModel()) {
@@ -57,6 +71,67 @@ fun StockLiveScreen(vm: StockViewModel = viewModel()) {
         )
 
         Spacer(modifier = Modifier.height(8.dp))
+
+        val step = 20
+
+        if (state.prices.isNotEmpty()) {
+            val pointsData: List<Point> =
+                state.prices.takeLast(step).mapIndexed { index, price ->
+                    Point(index.toFloat() + 1, price)
+                }
+            val yValues = pointsData.map { it.y }
+            val minY = yValues.minOrNull() ?: 167f
+            val maxY = yValues.maxOrNull() ?: 168f
+            val yRange = maxY - minY
+            val yPadding = yRange * 0.1f  // 10% padding on top and bottom
+
+            val xAxisData = AxisData.Builder()
+                .axisStepSize(15.dp)
+                .backgroundColor(Color.Blue)
+                .steps(step)
+                .labelData { i -> i.toString() }
+                .labelAndAxisLinePadding(10.dp)
+                .build()
+
+            val yAxisData = AxisData.Builder()
+                .steps(step)
+                .backgroundColor(Color.Red)
+                .labelAndAxisLinePadding(20.dp)
+                .labelData { i ->
+                    val stepValue = (maxY - minY + 2 * yPadding) / 2
+                    String.format(
+                        Locale.getDefault(),
+                        "%.2f", minY - yPadding + (i * stepValue)
+                    )
+                }
+                .build()
+
+            val lineChartData = LineChartData(
+                linePlotData = LinePlotData(
+                    lines = listOf(
+                        Line(
+                            dataPoints = pointsData,
+                            lineStyle = LineStyle(),
+                            intersectionPoint = IntersectionPoint(),
+                            selectionHighlightPoint = SelectionHighlightPoint(),
+                            shadowUnderLine = ShadowUnderLine(),
+                            selectionHighlightPopUp = SelectionHighlightPopUp()
+                        )
+                    ),
+                ),
+                xAxisData = xAxisData,
+                yAxisData = yAxisData,
+                gridLines = GridLines(),
+                backgroundColor = Color.White
+            )
+
+            LineChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                lineChartData = lineChartData
+            )
+        }
 
         LazyColumn {
             items(state.prices.reversed()) { price ->

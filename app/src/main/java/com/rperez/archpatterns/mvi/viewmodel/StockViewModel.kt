@@ -2,6 +2,7 @@ package com.rperez.archpatterns.mvi.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import co.yml.charts.common.model.Point
 import com.rperez.archpatterns.BuildConfig
 import com.rperez.archpatterns.mvi.data.FinnhubWebSocketClient
 import com.rperez.archpatterns.mvi.model.StockIntent
