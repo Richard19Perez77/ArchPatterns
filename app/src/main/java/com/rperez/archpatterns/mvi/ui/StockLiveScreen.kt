@@ -34,7 +34,7 @@ fun StockLiveScreen(vm: StockViewModel = viewModel()) {
         verticalArrangement = Arrangement.Top
     ) {
         if (state.isConnected) {
-            Text("Connected", color = Color.Green)
+            Text("Connected", color = Color(0xFF006400))
         } else {
             Button(onClick = { vm.process(StockIntent.Connect) }) {
                 Text("Connect")
