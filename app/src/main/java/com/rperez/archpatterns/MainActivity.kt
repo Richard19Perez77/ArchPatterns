@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.rperez.archpatterns.repository.presentation.ui.StockScreen
+import com.rperez.archpatterns.mvi.ui.StockLiveScreen
 import com.rperez.archpatterns.ui.theme.ArchPatternsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    StockScreen()
+                    StockLiveScreen()
                 }
             }
         }
